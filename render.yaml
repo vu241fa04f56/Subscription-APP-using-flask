@@ -1,0 +1,64 @@
+# ── Render deployment config ───────────────────────────────────────────────────
+# Docs: https://render.com/docs/render-yaml-reference
+
+services:
+  # ── Backend (Flask + Socket.IO) ─────────────────────────────────────────────
+  - type: web
+    name: subspace-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile          # repo root Dockerfile
+    dockerContext: .                       # build context = repo root
+    plan: free                             # change to starter/standard for production
+    healthCheckPath: /api/health
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true                # Render auto-generates a secure random value
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: MONGO_URI
+        sync: false                        # set manually in Render dashboard
+      - key: MONGO_DB_NAME
+        value: subspace_db
+      - key: JWT_ACCESS_TOKEN_EXPIRES
+        value: "3600"
+      - key: JWT_REFRESH_TOKEN_EXPIRES
+        value: "2592000"
+      - key: FRONTEND_URL
+        sync: false                        # set to your actual frontend URL
+      - key: BACKEND_URL
+        sync: false                        # set to your Render backend URL
+      - key: UPLOAD_FOLDER
+        value: uploads
+      - key: MAX_CONTENT_LENGTH
+        value: "16777216"
+      - key: ADMIN_EMAIL
+        value: admin@subspace.com
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      # Optional — fill in Render dashboard if you use these services
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: noreply@subspace.com
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: MAX_NEARBY_DISTANCE_KM
+        value: "50"

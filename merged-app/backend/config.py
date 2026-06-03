@@ -6,7 +6,7 @@ load_dotenv()
 
 class Config:
     # Core
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-prod')
     DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
     TESTING = False
 
@@ -15,7 +15,7 @@ class Config:
     MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME', 'subspace_db')
 
     # JWT
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-key')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-change-in-prod')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES', 3600)))
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(seconds=int(os.environ.get('JWT_REFRESH_TOKEN_EXPIRES', 2592000)))
     JWT_TOKEN_LOCATION = ['headers']
@@ -53,7 +53,7 @@ class Config:
 
     # App
     FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
-    BACKEND_URL = os.environ.get('BACKEND_URL', 'http://localhost:5000')
+    BACKEND_URL  = os.environ.get('BACKEND_URL',  'http://localhost:5000')
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
     MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -65,40 +65,58 @@ class Config:
     # Geo
     MAX_NEARBY_DISTANCE_KM = float(os.environ.get('MAX_NEARBY_DISTANCE_KM', 50))
 
-    # CORS — always allow common local dev origins so the frontend server port never causes a mismatch
-    _env_origins = os.environ.get('FRONTEND_URL', 'http://localhost:3000').split(',')
-    _local_dev_origins = [
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        'http://localhost:5500',
-        'http://127.0.0.1:5500',
-        'http://localhost:8080',
-        'http://127.0.0.1:8080',
-    ]
-    CORS_ORIGINS = list(dict.fromkeys(_env_origins + _local_dev_origins))  # deduplicated, env origins first
+    # CORS — build allowed origins from FRONTEND_URL env var
+    # In production, set FRONTEND_URL=https://your-frontend.onrender.com
+    # Multiple origins supported: FRONTEND_URL=https://a.com,https://b.com
+    @classmethod
+    def get_cors_origins(cls):
+        env_origins = [o.strip() for o in os.environ.get('FRONTEND_URL', 'http://localhost:3000').split(',') if o.strip()]
+        local_dev = [
+            'http://localhost:3000', 'http://127.0.0.1:3000',
+            'http://localhost:5500', 'http://127.0.0.1:5500',
+            'http://localhost:8080', 'http://127.0.0.1:8080',
+        ]
+        combined = list(dict.fromkeys(env_origins + local_dev))
+        return combined
+
+    CORS_ORIGINS = property(lambda self: self.__class__.get_cors_origins())
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    CORS_ORIGINS = Config.get_cors_origins()
 
 
 class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
+    # In production, only allow origins from FRONTEND_URL (no local dev origins)
+    @classmethod
+    def get_cors_origins(cls):
+        env_origins = [o.strip() for o in os.environ.get('FRONTEND_URL', '').split(',') if o.strip()]
+        return env_origins if env_origins else ['*']
+
+    CORS_ORIGINS = property(lambda self: ProductionConfig.get_cors_origins())
 
 
 class TestingConfig(Config):
     TESTING = True
     MONGO_URI = 'mongodb://localhost:27017/subspace_test_db'
+    CORS_ORIGINS = ['*']
 
 
 config_map = {
     'development': DevelopmentConfig,
-    'production': ProductionConfig,
-    'testing': TestingConfig,
-    'default': DevelopmentConfig,
+    'production':  ProductionConfig,
+    'testing':     TestingConfig,
+    'default':     DevelopmentConfig,
 }
 
 def get_config():
     env = os.environ.get('FLASK_ENV', 'development')
-    return config_map.get(env, config_map['default'])
+    cfg_class = config_map.get(env, config_map['default'])
+    cfg = cfg_class()
+    # Resolve CORS_ORIGINS if it's a property
+    if isinstance(cfg.CORS_ORIGINS, property):
+        cfg.CORS_ORIGINS = cfg_class.get_cors_origins()
+    return cfg
