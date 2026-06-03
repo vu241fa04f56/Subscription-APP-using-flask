@@ -12,7 +12,8 @@ socketio = SocketIO()
 jwt = JWTManager()
 
 def create_app():
-    app = Flask(__name__)
+    frontend_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
+    app = Flask(__name__, static_folder=frontend_folder, static_url_path='')
     cfg = get_config()
     app.config.from_object(cfg)
 
@@ -75,11 +76,7 @@ def create_app():
 
     @app.route('/')
     def index():
-        return {
-            'message': 'Subspace Backend API is running',
-            'status': 'healthy',
-            'health_check': '/api/health'
-        }
+        return send_from_directory(app.static_folder, 'index.html')
 
     return app
 

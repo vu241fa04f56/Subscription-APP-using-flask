@@ -14,11 +14,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Install Python dependencies first (better layer caching)
-COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/requirements.txt ./backend/requirements.txt
+RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
-# Copy backend source
-COPY backend/ .
+# Copy backend and frontend source code
+COPY backend/ ./backend/
+COPY frontend/ ./frontend/
+
+# Set working directory to backend
+WORKDIR /app/backend
 
 # Create upload directories (persistent volume should be mounted here on Render)
 RUN mkdir -p uploads/profile_images uploads/invoices

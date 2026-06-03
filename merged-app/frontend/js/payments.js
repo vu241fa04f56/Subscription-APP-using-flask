@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function downloadInvoice(paymentId) {
   try {
     const token = localStorage.getItem('access_token');
-    const res = await fetch(`http://localhost:5000/api/payments/invoice/${paymentId}`, {
+    const res = await fetch(`/api/payments/invoice/${paymentId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) { showToast('Invoice not available', 'error'); return; }

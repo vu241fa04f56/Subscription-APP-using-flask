@@ -11,11 +11,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Install Python dependencies first (better layer caching)
-COPY merged-app/backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY merged-app/backend/requirements.txt ./backend/requirements.txt
+RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
-# Copy backend source code from the merged-app subdirectory
-COPY merged-app/backend/ .
+# Copy backend and frontend source code
+COPY merged-app/backend/ ./backend/
+COPY merged-app/frontend/ ./frontend/
+
+# Set working directory to backend
+WORKDIR /app/backend
 
 # Create upload directories
 RUN mkdir -p uploads/profile_images uploads/invoices
