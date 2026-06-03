@@ -73,6 +73,14 @@ def create_app():
     def health():
         return {'status': 'ok', 'version': '1.0.0'}
 
+    @app.route('/')
+    def index():
+        return {
+            'message': 'Subspace Backend API is running',
+            'status': 'healthy',
+            'health_check': '/api/health'
+        }
+
     return app
 
 
