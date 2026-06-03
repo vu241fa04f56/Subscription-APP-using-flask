@@ -1,6 +1,6 @@
-/* ===== Subspace Admin Panel v3 ===== */
-
-const ADMIN_API = '/api';
+const ADMIN_API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000'
+  ? `http://${window.location.hostname}:5000/api`
+  : '/api';
 
 // ── adminFetch with 10s timeout so Promise.all never hangs forever ────────────
 async function adminFetch(endpoint, options = {}, timeoutMs = 10000) {
