@@ -1,5 +1,6 @@
-# wsgi.py — gunicorn entry point
-# gunicorn command: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT wsgi:app
+import eventlet
+eventlet.monkey_patch()
+
 import os
 from app import app, socketio  # noqa: F401
 
