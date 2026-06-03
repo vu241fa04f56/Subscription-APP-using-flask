@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Payment Successful</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px">
+  <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="background:linear-gradient(135deg,#10b981,#059669);padding:36px;text-align:center">
+      <div style="font-size:48px">✅</div>
+      <h1 style="color:#fff;margin:12px 0 0;font-size:24px">Payment Successful!</h1>
+    </div>
+    <div style="padding:36px 40px">
+      <p style="color:#333;font-size:16px">Hi <strong>{{ name }}</strong>,</p>
+      <p style="color:#555;font-size:15px;line-height:1.6">Your payment of <strong>₹{{ amount }}</strong> for the <strong>{{ plan_name }}</strong> plan has been confirmed.</p>
+      <div style="background:#f0fdf4;border-left:4px solid #10b981;padding:16px;border-radius:4px;margin:24px 0">
+        <p style="margin:0;color:#065f46;font-size:14px">Your subscription is now active. Enjoy all premium features!</p>
+      </div>
+      {% if invoice_url %}
+      <a href="{{ invoice_url }}" style="display:inline-block;background:#6c47ff;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:14px">Download Invoice</a>
+      {% endif %}
+    </div>
+    <div style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee">
+      <p style="color:#aaa;font-size:12px;margin:0">&copy; 2025 Subspace Platform</p>
+    </div>
+  </div>
+</body>
+</html>

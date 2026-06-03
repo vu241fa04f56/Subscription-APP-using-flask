@@ -1,0 +1,82 @@
+version: '3.9'
+
+services:
+  mongo:
+    build: ./mongo
+    container_name: subspace_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS:-password}
+      MONGO_INITDB_DATABASE: subspace_db
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - subspace_net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: subspace_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - subspace_net
+
+  backend:
+    build: ../backend
+    container_name: subspace_backend
+    restart: unless-stopped
+    env_file: ../.env.production
+    environment:
+      FLASK_ENV: development
+      MONGO_URI: mongodb://${MONGO_ROOT_USER:-admin}:${MONGO_ROOT_PASS:-password}@mongo:27017/subspace_db?authSource=admin
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "5000:5000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - backend_uploads:/app/uploads
+    networks:
+      - subspace_net
+
+  frontend:
+    build: ../frontend
+    container_name: subspace_frontend
+    restart: unless-stopped
+    ports:
+      - "5500:80"
+    networks:
+      - subspace_net
+
+  nginx:
+    build: ./nginx
+    container_name: subspace_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - subspace_net
+
+volumes:
+  mongo_data:
+  backend_uploads:
+
+networks:
+  subspace_net:
+    driver: bridge

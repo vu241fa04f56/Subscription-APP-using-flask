@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+env/
+.venv/
+
+# Env
+.env
+.env.production
+.env.local
+*.env
+
+# Uploads
+backend/uploads/profile_images/*
+backend/uploads/invoices/*
+!backend/uploads/.gitkeep
+
+# Backups
+backups/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+.docker/
+
+# Node (if added later)
+node_modules/

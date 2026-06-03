@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Subspace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .main-content { animation: pageFadeIn 0.5s ease both; }
+    @keyframes pageFadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+    .sidebar-logo-wrap { display:flex; align-items:center; gap:10px; padding:0 24px 24px; border-bottom:1px solid var(--border); }
+    .sidebar-logo-icon { width:32px; height:32px; flex-shrink:0; }
+    .sidebar-logo { padding:0; border-bottom:none; }
+    .profile-avatar-big { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .profile-avatar-big:hover { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(108,71,255,0.2); }
+    .form-control { transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s; }
+    .form-control:focus { transform: scale(1.005); }
+    .card { animation: cardFadeIn 0.4s ease both; }
+    @keyframes cardFadeIn { from { opacity:0; transform:scale(0.98); } to { opacity:1; transform:none; } }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+  <aside class="sidebar">
+    <div class="sidebar-logo-wrap">
+      <svg class="sidebar-logo-icon" viewBox="0 0 32 32" fill="none">
+        <defs><linearGradient id="slg3" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6c47ff"/><stop offset="100%" stop-color="#a855f7"/>
+        </linearGradient></defs>
+        <circle cx="16" cy="16" r="14" stroke="url(#slg3)" stroke-width="2" fill="none"/>
+        <circle cx="16" cy="16" r="3.5" fill="url(#slg3)"/>
+        <circle cx="7" cy="12" r="2" fill="url(#slg3)" opacity="0.8"/>
+        <circle cx="25" cy="12" r="2" fill="url(#slg3)" opacity="0.8"/>
+        <circle cx="7" cy="22" r="2" fill="url(#slg3)" opacity="0.6"/>
+        <circle cx="25" cy="22" r="2" fill="url(#slg3)" opacity="0.6"/>
+        <line x1="7" y1="12" x2="16" y2="16" stroke="url(#slg3)" stroke-width="1.2" opacity="0.5"/>
+        <line x1="25" y1="12" x2="16" y2="16" stroke="url(#slg3)" stroke-width="1.2" opacity="0.5"/>
+        <line x1="7" y1="22" x2="16" y2="16" stroke="url(#slg3)" stroke-width="1.2" opacity="0.5"/>
+        <line x1="25" y1="22" x2="16" y2="16" stroke="url(#slg3)" stroke-width="1.2" opacity="0.5"/>
+      </svg>
+      <div class="sidebar-logo">SUBSPACE</div>
+    </div>
+    <nav>
+      <div class="nav-section">
+        <div class="nav-label">Main</div>
+        <a href="/dashboard.html" class="nav-item"><span class="icon">⚡</span> Dashboard</a>
+        <a href="/nearby.html"    class="nav-item"><span class="icon">📍</span> Nearby</a>
+        <a href="/chat.html" class="nav-item"><span class="icon">💬</span> Messages</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Entertainment</div>
+        <a href="/ott.html" class="nav-item"><span class="icon">🎬</span> Watch</a>
+        <a href="/ott-watchlist.html" class="nav-item"><span class="icon">🔖</span> My List</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Account</div>
+        <a href="/subscriptions.html" class="nav-item"><span class="icon">⭐</span> Subscriptions</a>
+        <a href="/payments.html"      class="nav-item"><span class="icon">💳</span> Payments</a>
+        <a href="/profile.html"       class="nav-item active"><span class="icon">👤</span> Profile</a>
+      </div>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <div class="page-header">
+      <h1>My Profile</h1>
+      <p>Manage your personal information</p>
+    </div>
+    <div class="card" style="max-width:600px">
+      <div class="profile-header">
+        <div class="profile-avatar-big" id="avatar-preview" data-user-avatar-preview><span id="avatar-initial" data-user-initial>?</span></div>
+        <div>
+          <h2 id="profile-name" data-user-name style="font-size:22px;margin-bottom:4px">—</h2>
+          <p id="profile-email" data-user-email style="color:var(--text-muted);font-size:14px"></p>
+          <span class="badge" id="profile-plan-badge" data-user-premium style="margin-top:8px;display:inline-block"></span>
+          <div style="margin-top:12px">
+            <label class="btn btn-outline" style="cursor:pointer;font-size:13px">
+              📷 Change Avatar
+              <input type="file" id="avatar-input" accept="image/*" style="display:none">
+            </label>
+          </div>
+        </div>
+      </div>
+      <form id="profile-form">
+        <div style="display:flex;gap:16px">
+          <div class="form-group" style="flex:2">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" id="field-name" class="form-control" placeholder="Your name">
+          </div>
+          <div class="form-group" style="flex:1">
+            <label class="form-label">Age</label>
+            <input type="number" name="age" id="field-age" class="form-control" placeholder="e.g. 25" min="18" max="100">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+          <textarea name="bio" id="field-bio" class="form-control" rows="3" placeholder="Tell others about yourself…"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input type="text" name="city" id="field-city" class="form-control" placeholder="e.g. Hyderabad">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <input type="text" name="country" id="field-country" class="form-control" placeholder="e.g. India">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Interests (comma-separated)</label>
+          <input type="text" name="interests" id="field-interests" class="form-control" placeholder="e.g. Technology, Startups, Design">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Skills (comma-separated)</label>
+          <input type="text" name="skills" id="field-skills" class="form-control" placeholder="e.g. Python, React, Marketing">
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-top:16px; margin-bottom:16px;">
+          <input type="checkbox" id="field-show-last-seen" name="show_last_seen" style="width:20px; height:20px; cursor:pointer;" checked>
+          <label for="field-show-last-seen" style="font-size:14px; cursor:pointer; user-select:none; margin:0; color:var(--text);">Show my Last Seen status to others</label>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" id="delete-account-btn" class="btn btn-danger">Delete Account</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Photos Upload Card -->
+    <div class="card" style="max-width:600px; margin-top: 24px;">
+      <h3 style="font-size:16px;margin-bottom:4px">My Photos (Maximum 5)</h3>
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px">These photos will be shown on your Tinder swipe card. The first photo will be used as background.</p>
+      <div id="photos-container" style="display:grid;grid-template-columns:repeat(5, 1fr);gap:12px;margin-bottom:16px">
+        <!-- Rendered dynamically -->
+      </div>
+      <label class="btn btn-outline" style="cursor:pointer;font-size:13px;display:inline-block">
+        📤 Upload Photo
+        <input type="file" id="photo-upload-input" accept="image/*" style="display:none">
+      </label>
+    </div>
+  </main>
+</div>
+<script src="/js/api.js"></script>
+<script src="/js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Welcome to Subspace</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px">
+  <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="background:linear-gradient(135deg,#6c47ff,#a855f7);padding:40px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:32px">Welcome, {{ name }}! 🚀</h1>
+    </div>
+    <div style="padding:36px 40px">
+      <p style="color:#333;font-size:16px;line-height:1.7">You've just joined <strong>Subspace</strong> — the platform for meaningful professional connections.</p>
+      <h3 style="color:#6c47ff;margin:24px 0 12px">What you can do:</h3>
+      <ul style="color:#555;font-size:14px;line-height:2;padding-left:20px">
+        <li>🤖 Get skill & interest matches</li>
+        <li>📍 Discover people nearby</li>
+        <li>💬 Chat in real time</li>
+        <li>⭐ Upgrade to Pro for unlimited access</li>
+      </ul>
+      <a href="{{ config.FRONTEND_URL if config else '#' }}/dashboard.html" style="display:inline-block;background:linear-gradient(135deg,#6c47ff,#a855f7);color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:24px">Go to Dashboard</a>
+    </div>
+    <div style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee">
+      <p style="color:#aaa;font-size:12px;margin:0">&copy; 2025 Subspace Platform</p>
+    </div>
+  </div>
+</body>
+</html>
