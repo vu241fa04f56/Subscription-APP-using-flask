@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000'
+  ? `http://${window.location.hostname}:5000/api`
+  : '/api';
 
 function getToken() {
   return localStorage.getItem('access_token');
